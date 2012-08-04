@@ -1,0 +1,122 @@
+<script type="text/javascript">
+// I need to figure out how to name= the javascript added form elements so that a variable array is passed to the params hash.
+// I also need to figure out that weird redirect thing for when I'm posting the form
+
+$(function() {
+
+	var variableInput = $(".variable_input").html();
+	var numericInput = $(".numeric_variable_input").html();
+	var stringInput = $(".string_variable_input").html();
+	var variableTemplate = variableInput.replace(numericInput, "").replace(stringInput, "");
+	$(".variable_input").html("");
+	
+	var question_text;
+	var variable_instances;
+	var selectFormat;
+	var variableNumber;
+	
+	$("#question_text").change(function() {
+		question_text = $(this).val();
+		if (question_text.match(/~/g)) {
+		variable_instances = question_text.match(/~/g).length;
+		} else {
+		variable_instances = 0;
+		}
+		$(".variable_input").html("");
+		for (i=1; i<=variable_instances; i++) {
+			$(".variable_input").append("<div id='variable_block" + i +"'>" + variableTemplate.replace("[[token]]", i).replace("[[number]]", i) + "</div>");
+		}
+	});
+	
+	$(".variable_input").on("change", "#format", function() {
+		selectFormat = $(this).val();
+		if (selectFormat == "Number" || selectFormat == "Dollars" || selectFormat == "Percentage") {
+			$(this).parent().html("<input type='hidden' name='format' value='" + selectFormat.toLowerCase() + "' /><h3>" + selectFormat + "</h3>" + numericInput);			
+		}
+		if (selectFormat == "Company" || selectFormat == "Name") {
+			$(this).parent().html("<input type='hidden' name='format' value='" + selectFormat.toLowerCase() + "' /><h3>" + selectFormat + "</h3>" + stringInput);
+		}
+	});
+});
+</script>
+
+<%= form_tag '/questions', :method => 'post' %>
+
+<section id="questions">
+<h2>Question</h2>
+	<div class="field">
+	<%= label_tag "section" %>	
+	<%= text_field_tag 'section' %>
+	</div>
+	<div class="field">
+	<%= label_tag "question_text" %>	
+	<%= text_area_tag 'question_text' %>
+	</div>
+	<div class="field">
+	<%= label_tag "category" %>	
+	<%= text_field_tag 'category' %>
+	</div>
+	<div class="field">
+	<%= label_tag "subclass" %>	
+	<%= text_field_tag 'subclass' %>
+	</div>	
+	<div class="field">
+	<%= label_tag "number" %>	
+	<%= text_field_tag 'number' %>
+	</div>
+</section>
+
+<section id="variables">
+<h2>Variables</h2>
+<div class="variable_input">
+	<h3>Variable [[token]]</h3>	
+	<%= hidden_field_tag 'number', "[[number]]" %>
+	<div class="field">
+	<%= label_tag "format" %>
+	<%= select_tag "format", "<option>Number</option><option>Dollars</option><option>Percentage</option><option>Company</option><option>Name</option>".html_safe, :include_blank => true %>
+	</div>
+	<div class="numeric_variable_input">
+		<div class="field">
+		<%= label_tag "minimum" %>
+		<%= text_field_tag "minimum" %>
+		</div>	
+		<div class="field">
+		<%= label_tag "maximum" %>
+		<%= text_field_tag "maximum" %>
+		</div>
+		<div class="field">
+		<%= label_tag "multiple" %>
+		<%= text_field_tag "multiple" %>
+		</div>	
+	</div>
+	<div class="string_variable_input">
+		<div class="field">
+		<%= label_tag "name" %>
+		<%= text_field_tag "name" %>
+		</div>	
+	</div>	
+</div>	
+</section>
+
+<section id="answers">
+<h2>Answers</h2>
+	<div id="field">
+	<%= label_tag 'right_answer' %>
+	<%= text_field_tag 'right_answer' %>	
+	</div>
+	<div id="field">
+	<%= label_tag 'wrong_answer1', 'Wrong Answer' %>
+	<%= text_field_tag 'wrong_answer1' %>	
+	</div>
+	<div id="field">
+	<%= label_tag 'wrong_answer2', 'Wrong Answer' %>
+	<%= text_field_tag 'wrong_answer2' %>	
+	</div>
+	<div id="field">
+	<%= label_tag 'wrong_answer3', "Wrong Answer" %>
+	<%= text_field_tag 'wrong_answer3' %>	
+	</div>	
+</section>
+
+<%= submit_tag 'Create Question', :confirm => "Create a new question template?" %>		
+</form>

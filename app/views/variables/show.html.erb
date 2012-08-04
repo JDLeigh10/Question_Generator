@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Question:</b>
+  <%= @variable.question_id %>
+</p>
+
+<p>
+  <b>Format:</b>
+  <%= @variable.format %>
+</p>
+
+<p>
+  <b>Minimum:</b>
+  <%= @variable.minimum %>
+</p>
+
+<p>
+  <b>Maximum:</b>
+  <%= @variable.maximum %>
+</p>
+
+<p>
+  <b>Multiple:</b>
+  <%= @variable.multiple %>
+</p>
+
+
+<%= link_to 'Edit', edit_variable_path(@variable) %> |
+<%= link_to 'Back', variables_path %>

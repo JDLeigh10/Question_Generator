@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  question_id: 1
+  format: MyString
+  minimum: 1
+  maximum: 1
+  multiple: 1
+
+two:
+  question_id: 1
+  format: MyString
+  minimum: 1
+  maximum: 1
+  multiple: 1

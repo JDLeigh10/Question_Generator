@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Question:</b>
+  <%= @answer.question_id %>
+</p>
+
+<p>
+  <b>Right answer:</b>
+  <%= @answer.right_answer %>
+</p>
+
+<p>
+  <b>Wrong answer1:</b>
+  <%= @answer.wrong_answer1 %>
+</p>
+
+<p>
+  <b>Wrong answer2:</b>
+  <%= @answer.wrong_answer2 %>
+</p>
+
+<p>
+  <b>Wrong answer3:</b>
+  <%= @answer.wrong_answer3 %>
+</p>
+
+
+<%= link_to 'Edit', edit_answer_path(@answer) %> |
+<%= link_to 'Back', answers_path %>

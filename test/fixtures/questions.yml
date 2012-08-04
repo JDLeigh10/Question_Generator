@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  section: MyString
+  question_text: MyText
+  category: MyString
+  subclass: MyString
+  number: 1
+
+two:
+  section: MyString
+  question_text: MyText
+  category: MyString
+  subclass: MyString
+  number: 1

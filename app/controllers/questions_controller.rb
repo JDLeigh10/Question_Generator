@@ -46,7 +46,7 @@ class QuestionsController < ApplicationController
     @question.question_text = params[:question_text]
     @question.category = params[:category]
     @question.subclass = params[:subclass]
-    @question.number = params[:number]
+    @question.number = params[:qnumber]
     @question.save
     
     @answer = Answer.new
@@ -57,12 +57,31 @@ class QuestionsController < ApplicationController
     @answer.wrong_answer3 = params[:wrong_answer3]
     @answer.save
     
-    redirect_to :root
-  
+    variables = []
+    
+    params.each do |key,value|
+      if key.match(/variable/)
+        variables << value
+      end
+    end
+    
+    variables.each do |hash|
+      @variable = Variable.new
+      @variable.question_id = @question.id
+      @variable.format = hash["format"]
+      @variable.number = hash["number"]
+      if hash["format"] == "dollars" || hash["format"] == "number" || hash["format"] == "percentage"
+        @variable.minimum = hash["minimum"]
+        @variable.maximum = hash["maximum"]
+        @variable.multiple = hash["multiple"]
+      end
+      @variable.save
+    end
+            
     respond_to do |format|
       if @question.save
-        format.html { redirect_to @question, notice: 'Question was successfully created.' }
-        format.json { render json: @question, status: :created, location: @question }
+        format.html { redirect_to root_url, notice: 'Question was successfully created.' }
+        format.json { render json: root_url, status: :created, location: @question }
       else
         format.html { render action: "new" }
         format.json { render json: @question.errors, status: :unprocessable_entity }

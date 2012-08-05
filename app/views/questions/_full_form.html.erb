@@ -6,8 +6,7 @@ $(function() {
 
 	var variableInput = $(".variable_input").html();
 	var numericInput = $(".numeric_variable_input").html();
-	var stringInput = $(".string_variable_input").html();
-	var variableTemplate = variableInput.replace(numericInput, "").replace(stringInput, "");
+	var variableTemplate = variableInput.replace(numericInput, "");
 	$(".variable_input").html("");
 	
 	var question_text;
@@ -31,10 +30,13 @@ $(function() {
 	$(".variable_input").on("change", "#format", function() {
 		selectFormat = $(this).val();
 		if (selectFormat == "Number" || selectFormat == "Dollars" || selectFormat == "Percentage") {
-			$(this).parent().html("<input type='hidden' name='format' value='" + selectFormat.toLowerCase() + "' /><h3>" + selectFormat + "</h3>" + numericInput);			
+			var i = $(this).parent().parent().find("#number").attr("value");
+			$(this).parent().html("<input type='hidden' name='variable"+i+"[format]' value='" + selectFormat.toLowerCase() + "' /><h3>" + selectFormat + "</h3>" + numericInput.replace("[[minimum]]", "variable"+i+"[minimum]").replace("[[maximum]]", "variable"+i+"[maximum]").replace("[[multiple]]", "variable"+i+"[multiple]"));	
 		}
 		if (selectFormat == "Company" || selectFormat == "Name") {
-			$(this).parent().html("<input type='hidden' name='format' value='" + selectFormat.toLowerCase() + "' /><h3>" + selectFormat + "</h3>" + stringInput);
+			var i = $(this).parent().parent().find("#number").attr("value");
+			console.log(i);
+			$(this).parent().html("<input type='hidden' name='variable"+i+"[format]' value='" + selectFormat.toLowerCase() + "' /><h3>" + selectFormat + "</h3>");
 		}
 	});
 });
@@ -61,8 +63,8 @@ $(function() {
 	<%= text_field_tag 'subclass' %>
 	</div>	
 	<div class="field">
-	<%= label_tag "number" %>	
-	<%= text_field_tag 'number' %>
+	<%= label_tag "qnumber", "Number" %>	
+	<%= text_field_tag 'qnumber' %>
 	</div>
 </section>
 
@@ -77,24 +79,18 @@ $(function() {
 	</div>
 	<div class="numeric_variable_input">
 		<div class="field">
-		<%= label_tag "minimum" %>
-		<%= text_field_tag "minimum" %>
+		<label for="minimum">Minimum</label>
+		<input id="minimum" name="[[minimum]]" type="text" />
 		</div>	
 		<div class="field">
-		<%= label_tag "maximum" %>
-		<%= text_field_tag "maximum" %>
+		<label for="maxmimum">Maximum</label>
+		<input id="maximum" name="[[maximum]]" type="text" />
 		</div>
 		<div class="field">
-		<%= label_tag "multiple" %>
-		<%= text_field_tag "multiple" %>
+		<label for="multiple">Multiple</label>
+		<input id="multiple" name="[[multiple]]" type="text" />
 		</div>	
 	</div>
-	<div class="string_variable_input">
-		<div class="field">
-		<%= label_tag "name" %>
-		<%= text_field_tag "name" %>
-		</div>	
-	</div>	
 </div>	
 </section>
 

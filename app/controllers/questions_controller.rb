@@ -15,6 +15,37 @@ class QuestionsController < ApplicationController
   # GET /questions/1.json
   def show
     @question = Question.find(params[:id])
+    variables = Variable.find_all_by_question_id(params[:id])
+    gen_var_array = []
+    answers_array = []
+    @final_answers_array = []
+    
+    variables.each do |v|
+      if v.format == "number"
+        item = rand(v.minimum..v.maximum).roundup(v.multiple)
+      end
+      gen_var_array << item
+    end
+        
+    gen_var_array.each do |variable|
+      @question.question_text.sub!("~", variable.to_s)
+    end
+      
+    answers = Answer.find_by_question_id(params[:id])
+    answers_array << answers.right_answer
+    answers_array << answers.wrong_answer1
+    answers_array << answers.wrong_answer2
+    answers_array << answers.wrong_answer3
+    
+    answers_array.each do |a|
+      a = a.to_s
+        10.times do |i|
+          a.gsub!("~#{i+1}", gen_var_array[i].to_s)
+        end
+      item = eval a
+      @final_answers_array << item
+    end
+    @final_answers_array.shuffle!
 
     respond_to do |format|
       format.html # show.html.erb

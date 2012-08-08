@@ -1,4 +1,6 @@
 QuestionForm::Application.routes.draw do
+  resources :companies
+
   resources :answers
 
   resources :variables

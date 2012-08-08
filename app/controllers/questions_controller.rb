@@ -23,6 +23,9 @@ class QuestionsController < ApplicationController
     variables.each do |v|
       if v.format == "number"
         gen_var_array << rand(v.minimum..v.maximum).roundup(v.multiple)
+      elsif v.format = "company"
+        company_array = Company.all(:order => "RANDOM()")
+        gen_var_array <<  company_array[rand(0..(company_array.length-1))].name
       end
     end
     

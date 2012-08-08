@@ -25,9 +25,9 @@ class QuestionsController < ApplicationController
         gen_var_array << rand(v.minimum..v.maximum).roundup(v.multiple)
       end
     end
-        
-    gen_var_array.each do |variable|
-      @question.question_text.sub!("~", variable.to_s)
+    
+    10.times do |i|
+      @question.question_text.gsub!("~#{i+1}", gen_var_array[i].to_s)
     end
       
     answers = Answer.find_by_question_id(params[:id])

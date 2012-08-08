@@ -1,6 +1,22 @@
 <script type="text/javascript">
-// I need to figure out how to name= the javascript added form elements so that a variable array is passed to the params hash.
-// I also need to figure out that weird redirect thing for when I'm posting the form
+var unique = function(origArr) {  
+    var newArr = [],  
+        origLen = origArr.length,  
+        found,  
+        x, y;  
+          
+    for ( x = 0; x < origLen; x++ ) {  
+        found = undefined;  
+        for ( y = 0; y < newArr.length; y++ ) {  
+            if ( origArr[x] === newArr[y] ) {   
+              found = true;  
+              break;  
+            }  
+        }  
+        if ( !found) newArr.push( origArr[x] );      
+    }  
+   return newArr;  
+};
 
 $(function() {
 
@@ -16,8 +32,8 @@ $(function() {
 	
 	$("#question_text").change(function() {
 		question_text = $(this).val();
-		if (question_text.match(/~/g)) {
-		variable_instances = question_text.match(/~/g).length;
+		if (question_text.match(/[~]\d/g)) {
+		variable_instances = unique(question_text.match(/[~]\d/g)).length;
 		} else {
 		variable_instances = 0;
 		}

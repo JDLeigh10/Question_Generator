@@ -112,6 +112,11 @@ $(function() {
 	<%= label_tag 'wrong_answer3', "Wrong Answer" %>
 	<%= text_field_tag 'wrong_answer3' %>	
 	</div>	
+	<div id="field">
+	<%= label_tag 'interpret', "Interpret" %>	
+	<%= select_tag 'interpret', "<option value='literal' selected>Literal</option><option value='eval'>Eval</option>".html_safe %>
+	</div>	
+	
 </section>
 
 <%= submit_tag 'Create Question', :confirm => "Create a new question template?" %>		

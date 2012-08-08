@@ -22,9 +22,8 @@ class QuestionsController < ApplicationController
     
     variables.each do |v|
       if v.format == "number"
-        item = rand(v.minimum..v.maximum).roundup(v.multiple)
+        gen_var_array << rand(v.minimum..v.maximum).roundup(v.multiple)
       end
-      gen_var_array << item
     end
         
     gen_var_array.each do |variable|
@@ -42,8 +41,11 @@ class QuestionsController < ApplicationController
         10.times do |i|
           a.gsub!("~#{i+1}", gen_var_array[i].to_s)
         end
-      item = eval a
-      @final_answers_array << item
+      if answers.interpret == 'eval'
+        @final_answers_array << eval(a)
+      else
+        @final_answers_array << a
+      end
     end
     @final_answers_array.shuffle!
 
@@ -86,6 +88,7 @@ class QuestionsController < ApplicationController
     @answer.wrong_answer1 = params[:wrong_answer1]
     @answer.wrong_answer2 = params[:wrong_answer2]
     @answer.wrong_answer3 = params[:wrong_answer3]
+    @answer.interpret = params[:interpret]
     @answer.save
     
     variables = []

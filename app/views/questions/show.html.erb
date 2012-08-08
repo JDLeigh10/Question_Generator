@@ -11,8 +11,8 @@ ol {
 
 <h3>Answers</h3>
 <ol>
-<% @final_answers_array.each do |a| %>
-<li><%= a %></li>
+<% @final_answers_array.each do |choice| %>
+<li class='<%= choice.correct %>'><%= choice.choice_text %></li>
 <% end %>
 </ol>
 

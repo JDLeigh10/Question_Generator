@@ -34,20 +34,20 @@ class QuestionsController < ApplicationController
     end
       
     answers = Answer.find_by_question_id(params[:id])
-    answers_array << answers.right_answer
-    answers_array << answers.wrong_answer1
-    answers_array << answers.wrong_answer2
-    answers_array << answers.wrong_answer3
+    answers_array << Choice.new(:correct => true, :choice_text => answers.right_answer)
+    answers_array << Choice.new(:correct => false, :choice_text => answers.wrong_answer1)
+    answers_array << Choice.new(:correct => false, :choice_text => answers.wrong_answer2)
+    answers_array << Choice.new(:correct => false, :choice_text => answers.wrong_answer3)
     
-    answers_array.each do |a|
-      a = a.to_s
+    answers_array.each do |choice|
         10.times do |i|
-          a.gsub!("~#{i+1}", gen_var_array[i].to_s)
+          choice.choice_text.gsub!("~#{i+1}", gen_var_array[i].to_s)
         end
       if answers.interpret == 'eval'
-        @final_answers_array << eval(a)
+        choice.choice_text = eval(choice.choice_text)
+        @final_answers_array << choice
       else
-        @final_answers_array << a
+        @final_answers_array << choice
       end
     end
     @final_answers_array.shuffle!

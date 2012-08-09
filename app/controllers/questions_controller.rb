@@ -20,12 +20,12 @@ class QuestionsController < ApplicationController
     @final_answers_array = []
     
     i = 0
-    @question.variables.each do |v|
+    @question.variables.each_with_index do |v, i|
       gen_var_array << case v.format 
                        when "number" 
                          rand(v.minimum..v.maximum).roundup(v.multiple)
                        when "company" 
-                         Company.first(:order => "RANDOM()").name
+                         Company.last(:order => "RANDOM()", :limit => i+1).name
                        end
                        
     @question.question_text.gsub!("~#{i+1}", gen_var_array[i].to_s)
@@ -96,7 +96,8 @@ class QuestionsController < ApplicationController
       @variable.question_id = @question.id
       @variable.format = hash["format"]
       @variable.number = hash["number"]
-      if hash["format"] == "dollars" || hash["format"] == "number" || hash["format"] == "percentage"
+      case hash["format"] 
+        when "dollars", "number", "percentage"
         @variable.minimum = hash["minimum"]
         @variable.maximum = hash["maximum"]
         @variable.multiple = hash["multiple"]

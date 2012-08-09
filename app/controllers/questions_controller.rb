@@ -15,42 +15,31 @@ class QuestionsController < ApplicationController
   # GET /questions/1.json
   def show
     @question = Question.find(params[:id])
-    variables = Variable.find_all_by_question_id(params[:id])
     gen_var_array = []
-    answers_array = []
+    @answers = @question.answer.to_choices
     @final_answers_array = []
     
-    variables.each do |v|
-      if v.format == "number"
-        gen_var_array << rand(v.minimum..v.maximum).roundup(v.multiple)
-      elsif v.format = "company"
-        company_array = Company.all(:order => "RANDOM()")
-        gen_var_array <<  company_array[rand(0..(company_array.length-1))].name
-      end
+    i = 0
+    @question.variables.each do |v|
+      gen_var_array << case v.format 
+                       when "number" 
+                         rand(v.minimum..v.maximum).roundup(v.multiple)
+                       when "company" 
+                         Company.first(:order => "RANDOM()").name
+                       end
+                       
+    @question.question_text.gsub!("~#{i+1}", gen_var_array[i].to_s)
+    i += 1                   
     end
     
-    10.times do |i|
-      @question.question_text.gsub!("~#{i+1}", gen_var_array[i].to_s)
-    end
-      
-    answers = Answer.find_by_question_id(params[:id])
-    answers_array << Choice.new(:correct => true, :choice_text => answers.right_answer)
-    answers_array << Choice.new(:correct => false, :choice_text => answers.wrong_answer1)
-    answers_array << Choice.new(:correct => false, :choice_text => answers.wrong_answer2)
-    answers_array << Choice.new(:correct => false, :choice_text => answers.wrong_answer3)
-    
-    answers_array.each do |choice|
+    @answers.each do |choice|
         10.times do |i|
-          choice.choice_text.gsub!("~#{i+1}", gen_var_array[i].to_s)
+          choice[:choice_text].gsub!("~#{i+1}", gen_var_array[i].to_s)
         end
-      if answers.interpret == 'eval'
-        choice.choice_text = eval(choice.choice_text)
-        @final_answers_array << choice
-      else
-        @final_answers_array << choice
+      if @question.answer.interpret == 'eval'
+        choice[:choice_text] = eval(choice[:choice_text])
       end
     end
-    @final_answers_array.shuffle!
 
     respond_to do |format|
       format.html # show.html.erb

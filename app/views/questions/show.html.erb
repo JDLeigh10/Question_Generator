@@ -72,8 +72,8 @@ li {
 
 <h3>Answers</h3>
 <ol class='rectangle-list'>
-<% @final_answers_array.each do |choice| %>
-<li><a href="" class='<%= choice.correct %>'><%= choice.choice_text %></a></li>
+<% @answers.each do |choice| %>
+<li><a href="" class='<%= choice[:correct] %>'><%= choice[:choice_text] %></a></li>
 <% end %>
 </ol>
 

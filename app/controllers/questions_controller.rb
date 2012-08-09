@@ -37,6 +37,7 @@ class QuestionsController < ApplicationController
           choice[:choice_text].gsub!("~#{i+1}", gen_var_array[i].to_s)
         end
       if @question.answer.interpret == 'eval'
+        # Note, this is not a secure line of code. The choice[:choice_text] should be sanitized before being eval'd.
         choice[:choice_text] = eval(choice[:choice_text])
       end
     end
